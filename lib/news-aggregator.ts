@@ -202,7 +202,7 @@ export async function getGameSpecificNews(gameName: string, limit: number = 3): 
         
         // Extract dynamically (Google News puts images in description, content, or media extensions)
         let img = "";
-        const htmlContent = item.contentFull || item.content || item.description || "";
+        const htmlContent = item.contentFull || item.content || (item as any).description || "";
         const match = htmlContent.match(/<img[^>]+src="([^">]+)"/i);
         if (match && match[1]) img = match[1];
         else if (item.media && item.media["$"]?.url) img = item.media["$"].url;
@@ -261,7 +261,7 @@ export async function getGameYouTubeVideos(gameName: string, limit: number = 3):
         const cleanTitle = item.title?.replace(/\s-\s[^-]+$/, "") || "";
         
         let img = "";
-        const htmlContent = item.contentFull || item.content || item.description || "";
+        const htmlContent = item.contentFull || item.content || (item as any).description || "";
         const match = htmlContent.match(/<img[^>]+src="([^">]+)"/i);
         if (match && match[1]) img = match[1];
         
@@ -357,7 +357,7 @@ export async function getGameGuides(gameName: string, limit: number = 3): Promis
 
         // Extract dynamically (Google News puts images in description/content)
         let img = "";
-        const htmlContent = item.contentFull || item.content || item.description || "";
+        const htmlContent = item.contentFull || item.content || (item as any).description || "";
         const match = htmlContent.match(/<img[^>]+src="([^">]+)"/i);
         if (match && match[1]) img = match[1];
         else if (item.media && item.media["$"]?.url) img = item.media["$"].url;
