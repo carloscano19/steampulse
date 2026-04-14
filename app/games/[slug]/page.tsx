@@ -14,22 +14,33 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const game = await getGameBySlug(slug);
-  
-  if (!game) return { title: "Game Not Found" };
-  
-  return {
-    title: game.name,
-    description: game.summary,
-  };
+  try {
+    const { slug } = await params;
+    const game = await getGameBySlug(slug);
+    
+    if (!game) return { title: "Game Not Found" };
+    
+    return {
+      title: game.name,
+      description: game.summary,
+    };
+  } catch {
+    return { title: "StreamPulse — Game" };
+  }
 }
 
 export const revalidate = 0; // Temp override to fix frozen ISR cache so user can see live updates!
 
 export default async function GameDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const game = await getGameBySlug(slug);
+  
+  let game;
+  try {
+    game = await getGameBySlug(slug);
+  } catch (err) {
+    console.error("IGDB fetch failed for slug:", slug, err);
+    game = null;
+  }
 
   if (!game) {
     notFound();
@@ -39,13 +50,18 @@ export default async function GameDetailPage({ params }: PageProps) {
   const cookieStore = await cookies();
   const isCurrentSpotlight = cookieStore.get("custom_spotlight")?.value === game.slug;
 
-  // Cross-reference Live data and get guaranteed historic/recent game news
-  const [relatedNews, streams, gameGuides, youtubeVideos] = await Promise.all([
+  // Cross-reference Live data — use allSettled so one API failure doesn't crash the whole page
+  const [newsResult, streamsResult, guidesResult, ytResult] = await Promise.allSettled([
     getGameSpecificNews(game.name, 3),
     getGameStreams(game.name, 3),
     getGameGuides(game.name, 3),
     getGameYouTubeVideos(game.name, 3)
   ]);
+
+  const relatedNews = newsResult.status === "fulfilled" ? newsResult.value : [];
+  const streams = streamsResult.status === "fulfilled" ? streamsResult.value : [];
+  const gameGuides = guidesResult.status === "fulfilled" ? guidesResult.value : [];
+  const youtubeVideos = ytResult.status === "fulfilled" ? ytResult.value : [];
 
   const releaseYear = game.release_date
     ? new Date(game.release_date).getFullYear()

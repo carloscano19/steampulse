@@ -17,11 +17,15 @@ export default async function Home() {
     // Use a random offset to ensure Home diversity (SRS 4.3)
     const randomOffset = Math.floor(Math.random() * 50);
     
-    [trendingGames, liveStreams, news] = await Promise.all([
+    const [gamesResult, streamsResult, newsResult] = await Promise.allSettled([
       searchGames("", 6, randomOffset, 'trending'),
       getTopTwitchStreams(4),
       getAggregatedNews(40) // Fetch more for better category filtering
     ]);
+
+    trendingGames = gamesResult.status === "fulfilled" ? gamesResult.value : [];
+    liveStreams = streamsResult.status === "fulfilled" ? streamsResult.value : [];
+    news = newsResult.status === "fulfilled" ? newsResult.value : [];
   } catch (error) {
     console.error("Home page API parallel error:", error);
   }
