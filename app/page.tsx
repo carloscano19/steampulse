@@ -5,7 +5,7 @@ import { getAggregatedNews } from "@/lib/news-aggregator";
 import { GameCard } from "@/components/games/GameCard";
 import { NewsInteractiveWidget } from "@/components/home/NewsInteractiveWidget";
 
-export const revalidate = 0; // Force Next.js to not cache this to prove the update works
+export const revalidate = 120; // ISR: cache 2 minutes — balances freshness with fast loads
 
 export default async function Home() {
   let trendingGames: import("@/types").Game[] = [];
@@ -20,7 +20,7 @@ export default async function Home() {
     const [gamesResult, streamsResult, newsResult] = await Promise.allSettled([
       searchGames("", 6, randomOffset, 'trending'),
       getTopTwitchStreams(4),
-      getAggregatedNews(40) // Fetch more for better category filtering
+      getAggregatedNews(40, true) // skipIGDBMatch=true — home page doesn't need per-article IGDB data
     ]);
 
     trendingGames = gamesResult.status === "fulfilled" ? gamesResult.value : [];

@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 
-export const revalidate = 0; // Ensure live data for the hot trending page
+export const revalidate = 300; // ISR: cache 5 minutes for spotlight page
 
 export const metadata: Metadata = {
   title: "Spotlight VIP | StreamPulse",

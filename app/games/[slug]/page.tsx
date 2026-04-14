@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export const revalidate = 0; // Temp override to fix frozen ISR cache so user can see live updates!
+export const revalidate = 300; // ISR: cache 5 minutes for game detail pages
 
 export default async function GameDetailPage({ params }: PageProps) {
   const { slug } = await params;

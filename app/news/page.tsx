@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export const revalidate = 600; // Refrescar cada 10 minutos (SRS 4.3)
 
 export default async function NewsPage() {
-  const news = await getAggregatedNews(40);
+  const news = await getAggregatedNews(40, true); // skipIGDBMatch — not needed for news portal cards
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-12 min-h-screen">
