@@ -55,9 +55,9 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${inter.variable} ${rajdhani.variable} h-full antialiased`}
+      className={`${inter.variable} ${rajdhani.variable} antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-text-primary">
+      <body className="flex flex-col bg-background text-text-primary">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

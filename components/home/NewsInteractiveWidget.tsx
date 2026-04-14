@@ -114,9 +114,9 @@ export function NewsInteractiveWidget({ initialNews }: { initialNews: NewsArticl
           <div
             key={item.id}
             onClick={() => window.open(item.url, '_blank', 'noopener,noreferrer')}
-            className="flex items-center gap-4 p-4 rounded-xl backdrop-blur-xl bg-surface/30 border border-surface-2 group transition-all duration-300 hover:border-accent-purple/50 hover:shadow-lg hover:-translate-y-1 hover:bg-surface/50 cursor-pointer animate-slide-up"
+            className="flex items-start sm:items-center gap-4 p-4 rounded-xl backdrop-blur-xl bg-surface/30 border border-surface-2 group transition-all duration-300 hover:border-accent-purple/50 hover:shadow-lg hover:-translate-y-1 hover:bg-surface/50 cursor-pointer animate-slide-up"
           >
-            <div className="w-16 h-16 rounded-xl bg-surface flex items-center justify-center flex-shrink-0 border border-surface-2 group-hover:border-accent-blue transition-colors overflow-hidden relative shadow-inner">
+            <div className="w-16 h-16 rounded-xl bg-surface flex items-center justify-center flex-shrink-0 border border-surface-2 group-hover:border-accent-blue transition-colors overflow-hidden relative shadow-inner mt-1 sm:mt-0">
               {item.imageUrl ? (
                   <img src={item.imageUrl} alt={item.title} className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-500" />
               ) : (
@@ -125,7 +125,7 @@ export function NewsInteractiveWidget({ initialNews }: { initialNews: NewsArticl
             </div>
             
             <div className="flex-1 min-w-0 flex flex-col justify-center">
-              <h3 className="text-[15px] font-semibold text-text-primary group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-accent-purple group-hover:to-accent-blue transition-all leading-tight line-clamp-2">
+              <h3 className="text-[15px] font-semibold text-text-primary group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-accent-purple group-hover:to-accent-blue transition-all leading-snug">
                 <span className="hover:underline">{item.title}</span>
               </h3>
               
