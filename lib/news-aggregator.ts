@@ -174,19 +174,31 @@ async function fetchFeed(config: FeedConfig): Promise<NewsArticle[]> {
  */
 export async function getGameSpecificNews(gameName: string, limit: number = 3): Promise<NewsArticle[]> {
   try {
-     const safeName = encodeURIComponent(`"${gameName}" (videojuego OR gaming)`);
+     // Remove restrictive keywords to allow fresh natural news
+     const safeName = encodeURIComponent(`"${gameName}"`);
      const url = `https://news.google.com/rss/search?q=${safeName}&hl=es&gl=ES&ceid=ES:es`;
      const res = await fetch(url, { next: { revalidate: 3600 } });
      const rawXml = await res.text();
      const feed = await parser.parseString(rawXml);
      
+     // Google returns by Relevance. We MUST sort by Date to get the absolute newest articles.
+     const sortedItems = feed.items.sort((a, b) => {
+        const d1 = a.pubDate ? new Date(a.pubDate).getTime() : 0;
+        const d2 = b.pubDate ? new Date(b.pubDate).getTime() : 0;
+        return d2 - d1;
+     });
+
      const articles: NewsArticle[] = [];
-     for(let i = 0; i < Math.min(limit, feed.items.length); i++) {
-        const item = feed.items[i];
+     for(let i = 0; i < Math.min(limit, sortedItems.length); i++) {
+        const item = sortedItems[i];
         const cleanTitle = item.title?.replace(/\s-\s[^-]+$/, "") || "";
         const pubDate = item.pubDate ? new Date(item.pubDate) : new Date();
         const hoursAgo = Math.floor((Date.now() - pubDate.getTime()) / (1000 * 60 * 60));
-        const timeStr = hoursAgo === 0 ? "hace <1h" : (hoursAgo < 24 ? `hace ${hoursAgo}h` : `hace ${Math.floor(hoursAgo/24)}d`);
+        
+        let timeStr = "";
+        if (hoursAgo === 0) timeStr = "hace <1h";
+        else if (hoursAgo < 24) timeStr = `hace ${hoursAgo}h`;
+        else timeStr = `hace ${Math.floor(hoursAgo/24)}d`;
 
         articles.push({
            id: item.guid || `gn-${gameName}-${i}`,
