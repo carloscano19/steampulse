@@ -1,68 +1,50 @@
 import type { Game } from "@/types";
+import { getTwitchToken, fetchWithTimeout } from "./twitch-token";
 
-const TWITCH_OAUTH_URL = "https://id.twitch.tv/oauth2/token";
 const IGDB_API_URL = "https://api.igdb.com/v4/games";
 
-let _accessToken = "";
-let _tokenExpiry = 0;
-
 /**
- * Retrieves and caches the Twitch OAuth App Access Token.
- */
-async function getTwitchToken(): Promise<string> {
-  // Return cached token if valid
-  if (_accessToken && Date.now() < _tokenExpiry) {
-    return _accessToken;
-  }
-
-  const clientId = process.env.IGDB_CLIENT_ID;
-  const clientSecret = process.env.IGDB_CLIENT_SECRET;
-
-  if (!clientId || !clientSecret) {
-    throw new Error("IGDB (Twitch) credentials are not set in environment variables");
-  }
-
-  const res = await fetch(
-    `${TWITCH_OAUTH_URL}?client_id=${clientId}&client_secret=${clientSecret}&grant_type=client_credentials`,
-    { method: "POST" }
-  );
-
-  if (!res.ok) {
-    throw new Error(`Twitch OAuth error: ${res.statusText}`);
-  }
-
-  const data = await res.json();
-  _accessToken = data.access_token;
-  // Expire 5 min before actual expiration (usually ~60 days) to be safe
-  _tokenExpiry = Date.now() + (data.expires_in - 300) * 1000;
-
-  return _accessToken;
-}
-
-/**
- * Makes an Apicalypse query to IGDB.
+ * Makes an Apicalypse query to IGDB with timeout and retry.
  */
 async function queryIGDB(body: string) {
   const token = await getTwitchToken();
   const clientId = process.env.IGDB_CLIENT_ID!;
 
-  const res = await fetch(IGDB_API_URL, {
-    method: "POST",
-    headers: {
-      "Client-ID": clientId,
-      Authorization: `Bearer ${token}`,
-      "Accept": "application/json",
-    },
-    body,
-    // ISR cache for IGDB fetches disabled (0) to allow dynamic randomness from callers
-    next: { revalidate: 0 },
-  });
+  // Try up to 2 times
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const res = await fetchWithTimeout(IGDB_API_URL, {
+        method: "POST",
+        headers: {
+          "Client-ID": clientId,
+          Authorization: `Bearer ${token}`,
+          "Accept": "application/json",
+        },
+        body,
+        next: { revalidate: 300 }, // Cache 5 minutes — prevents hammering IGDB on every visit
+      }, 8000);
 
-  if (!res.ok) {
-    throw new Error(`IGDB API error: ${res.status}`);
+      if (!res.ok) {
+        const errBody = await res.text().catch(() => "");
+        console.error(`IGDB API attempt ${attempt + 1}: ${res.status} — ${errBody}`);
+        if (attempt === 0) {
+          await new Promise(r => setTimeout(r, 300));
+          continue;
+        }
+        throw new Error(`IGDB API error: ${res.status}`);
+      }
+
+      return res.json();
+    } catch (err: any) {
+      if (err.name === "AbortError") {
+        console.error(`IGDB query attempt ${attempt + 1} timed out`);
+      }
+      if (attempt === 1) throw err;
+      await new Promise(r => setTimeout(r, 300));
+    }
   }
 
-  return res.json();
+  throw new Error("IGDB query failed after retries");
 }
 
 /**
