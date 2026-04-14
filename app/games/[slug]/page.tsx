@@ -154,36 +154,71 @@ export default async function GameDetailPage({ params }: PageProps) {
             </p>
           </div>
 
-          {/* Game Guides & Walkthroughs */}
-          {gameGuides && gameGuides.length > 0 && (
-             <div className="mb-10 max-w-4xl">
-               <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#EAB308]"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>
-                 Guías y Trucos
-               </h3>
-               <div className="grid md:grid-cols-3 gap-4">
-                  {gameGuides.map((guide) => (
-                      <a href={guide.url} target="_blank" rel="noopener noreferrer" key={guide.id} className="block glass p-5 rounded-xl border border-[#EAB308]/30 hover:border-[#EAB308] transition-all hover:-translate-y-1 relative overflow-hidden group">
-                         <div className="absolute top-0 right-0 w-16 h-16 bg-[#EAB308]/10 rounded-bl-full -mr-8 -mt-8 group-hover:scale-150 transition-transform"></div>
-                         <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mb-2 bg-[#EAB308]/10 text-[#EAB308]">
-                           {guide.source}
-                         </span>
-                         <h4 className="text-sm font-semibold text-text-primary leading-snug">{guide.title}</h4>
-                      </a>
-                  ))}
-               </div>
-             </div>
-          )}
+          {/* COMPREHENSIVE HELP & GUIDES HUB */}
+          {((gameGuides && gameGuides.length > 0) || (youtubeVideos && youtubeVideos.length > 0)) && (
+            <div className="mb-12 max-w-4xl p-5 md:p-8 rounded-3xl border border-[#EAB308]/20 bg-gradient-to-br from-surface-2/40 via-surface/40 to-[#EAB308]/5 relative overflow-hidden shadow-2xl shadow-background">
+               {/* Ambient Glow */}
+               <div className="absolute -top-32 -right-32 w-64 h-64 bg-[#EAB308]/10 rounded-full blur-3xl pointer-events-none" />
 
-          {/* YouTube Community & Reviews */}
-          {youtubeVideos && youtubeVideos.length > 0 && (
-             <div className="mb-10 max-w-4xl">
-                <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
-                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-[#FF0000]"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29.01 29.01 0 0 0 1 11.75a29.01 29.01 0 0 0 .46 5.33 2.78 2.78 0 0 0 1.94 2c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29.01 29.01 0 0 0 .46-5.33 29.01 29.01 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="white"/></svg>
-                   Comunidad & Reviews (YouTube)
-                </h3>
-                <VideoGrid videos={youtubeVideos} />
-             </div>
+               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 relative z-10">
+                 <div>
+                   <h3 className="text-2xl font-black text-text-primary flex items-center gap-3 uppercase tracking-tight">
+                     <span className="p-2 rounded-xl bg-gradient-to-br from-[#EAB308]/20 to-[#EAB308]/5 border border-[#EAB308]/30">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#EAB308]"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
+                     </span>
+                     Help & Guides Hub
+                   </h3>
+                   <p className="text-sm text-text-secondary mt-2">Tutoriales, videoguías y acceso a enciclopedias oficiales del juego.</p>
+                 </div>
+                 
+                 {/* Official Wiki Mega Button */}
+                 <a 
+                    href={`https://duckduckgo.com/?q=site:fandom.com+OR+site:fextralife.com+OR+site:ign.com/wikis+"${encodeURIComponent(game.name)}"`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#EAB308] to-yellow-500 text-surface-dark font-extrabold text-sm transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-[#EAB308]/20 whitespace-nowrap"
+                 >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    Buscar en Wikis Oficiales
+                 </a>
+               </div>
+
+               {/* Video Guides Section */}
+               {youtubeVideos && youtubeVideos.length > 0 && (
+                 <div className="mb-8 relative z-10">
+                    <h4 className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-4 flex items-center gap-2">
+                       <span className="w-1.5 h-1.5 rounded-full bg-[#FF0000]" /> Videoguías y Gameplays
+                    </h4>
+                    <VideoGrid videos={youtubeVideos} />
+                 </div>
+               )}
+
+               {/* Textual Guides Subgrid */}
+               {gameGuides && gameGuides.length > 0 && (
+                 <div className="relative z-10 border-t border-surface-2/40 pt-6">
+                    <h4 className="text-xs font-bold text-text-secondary uppercase tracking-widest mb-4 flex items-center gap-2">
+                       <span className="w-1.5 h-1.5 rounded-full bg-accent-blue" /> Artículos de Ayuda Recientes
+                    </h4>
+                    <div className="grid md:grid-cols-3 gap-4">
+                       {gameGuides.map((guide) => (
+                          <a href={guide.url} target="_blank" rel="noopener noreferrer" key={guide.id} className="flex flex-col rounded-xl border border-surface-2 bg-surface/30 hover:bg-surface/60 hover:border-[#EAB308]/30 transition-all overflow-hidden group hover:-translate-y-0.5">
+                             {guide.imageUrl && (
+                               <div className="h-28 w-full relative overflow-hidden bg-surface-2">
+                                  <img src={guide.imageUrl} alt="" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
+                               </div>
+                             )}
+                             <div className="p-4 flex flex-col flex-1">
+                               <span className="w-fit inline-block px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider mb-2 bg-surface border border-surface-2 text-text-secondary">
+                                 {guide.source}
+                               </span>
+                               <h5 className="text-[13px] font-semibold text-text-primary leading-snug line-clamp-3 group-hover:text-[#EAB308] transition-colors">{guide.title}</h5>
+                             </div>
+                          </a>
+                       ))}
+                    </div>
+                 </div>
+               )}
+            </div>
           )}
 
           {/* Related News Cross-reference */}
