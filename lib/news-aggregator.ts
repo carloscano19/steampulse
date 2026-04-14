@@ -199,6 +199,13 @@ export async function getGameSpecificNews(gameName: string, limit: number = 3): 
         if (hoursAgo === 0) timeStr = "hace <1h";
         else if (hoursAgo < 24) timeStr = `hace ${hoursAgo}h`;
         else timeStr = `hace ${Math.floor(hoursAgo/24)}d`;
+        
+        // Extract dynamically (Google News puts images in description, content, or media extensions)
+        let img = "";
+        const htmlContent = item.contentFull || item.content || item.description || "";
+        const match = htmlContent.match(/<img[^>]+src="([^">]+)"/i);
+        if (match && match[1]) img = match[1];
+        else if (item.media && item.media["$"]?.url) img = item.media["$"].url;
 
         articles.push({
            id: item.guid || `gn-${gameName}-${i}`,
@@ -206,6 +213,7 @@ export async function getGameSpecificNews(gameName: string, limit: number = 3): 
            source: item.creator || "Media Español",
            url: item.link || "#",
            time: timeStr,
+           imageUrl: img,
            badgeAccent: "blue"
         });
      }
@@ -252,12 +260,18 @@ export async function getGameYouTubeVideos(gameName: string, limit: number = 3):
         const item = feed.items[i];
         const cleanTitle = item.title?.replace(/\s-\s[^-]+$/, "") || "";
         
+        let img = "";
+        const htmlContent = item.contentFull || item.content || item.description || "";
+        const match = htmlContent.match(/<img[^>]+src="([^">]+)"/i);
+        if (match && match[1]) img = match[1];
+        
         videos.push({
            id: item.guid || `yt-${gameName}-${i}`,
            title: cleanTitle,
            source: item.creator || "YouTube",
            url: item.link || "#",
            time: "hace poco",
+           imageUrl: img,
            badgeAccent: "default"
         });
      }
@@ -341,12 +355,20 @@ export async function getGameGuides(gameName: string, limit: number = 3): Promis
         const hoursAgo = Math.floor((Date.now() - pubDate.getTime()) / (1000 * 60 * 60));
         const timeStr = hoursAgo === 0 ? "hace <1h" : (hoursAgo < 24 ? `hace ${hoursAgo}h` : `hace ${Math.floor(hoursAgo/24)}d`);
 
+        // Extract dynamically (Google News puts images in description/content)
+        let img = "";
+        const htmlContent = item.contentFull || item.content || item.description || "";
+        const match = htmlContent.match(/<img[^>]+src="([^">]+)"/i);
+        if (match && match[1]) img = match[1];
+        else if (item.media && item.media["$"]?.url) img = item.media["$"].url;
+
         articles.push({
            id: item.guid || `guide-${gameName}-${i}`,
            title: cleanTitle,
            source: item.creator || "Wiki / Guía",
            url: item.link || "#",
            time: timeStr,
+           imageUrl: img,
            badgeAccent: "default" 
         });
      }
