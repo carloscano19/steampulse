@@ -58,16 +58,24 @@ export default async function GameDetailPage({ params }: PageProps) {
     getGameYouTubeVideos(game.name, 3)
   ]);
 
-  const relatedNews = newsResult.status === "fulfilled" ? newsResult.value : [];
+  const bgImage = game.cover_url ? game.cover_url.replace("t_cover_big", "t_1080p") : "";
+
+  // Helper to ensure components always have an image (fallback to game's cover/background if Google News strips it)
+  const applyFallbackImage = (item: any) => ({
+    ...item,
+    imageUrl: item.imageUrl || bgImage || game.cover_url || ""
+  });
+
+  const relatedNews = newsResult.status === "fulfilled" ? newsResult.value.map(applyFallbackImage) : [];
   const streams = streamsResult.status === "fulfilled" ? streamsResult.value : [];
-  const gameGuides = guidesResult.status === "fulfilled" ? guidesResult.value : [];
-  const youtubeVideos = ytResult.status === "fulfilled" ? ytResult.value : [];
+  const gameGuides = guidesResult.status === "fulfilled" ? guidesResult.value.map(applyFallbackImage) : [];
+  const youtubeVideos = ytResult.status === "fulfilled" ? ytResult.value.map(applyFallbackImage) : [];
 
   const releaseYear = game.release_date
     ? new Date(game.release_date).getFullYear()
     : "TBA";
   
-  const bgImage = game.cover_url ? game.cover_url.replace("t_cover_big", "t_1080p") : "";
+  
 
   return (
     <div className="relative min-h-screen">
