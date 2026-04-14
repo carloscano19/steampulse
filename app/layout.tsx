@@ -57,7 +57,7 @@ export default function RootLayout({
       lang="es"
       className={`${inter.variable} ${rajdhani.variable} antialiased`}
     >
-      <body className="flex flex-col bg-background text-text-primary">
+      <body className="flex flex-col bg-background text-text-primary overflow-x-hidden w-full">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

@@ -110,9 +110,9 @@ export default async function Home() {
 
       {/* Live Now + Latest News */}
       <section className="px-4 sm:px-6 lg:px-12 py-16">
-        <div className="max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-8">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Live Now */}
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-1 h-8 rounded-full bg-gradient-to-b from-accent-green to-accent-blue" />
               <h2 className="text-2xl font-semibold text-text-primary">Live Now</h2>
@@ -131,7 +131,7 @@ export default async function Home() {
                   className="flex items-center gap-4 p-4 rounded-xl glass neon-border animate-slide-up opacity-0 hover:bg-surface-2/50 transition-colors cursor-pointer group"
                   style={{ animationDelay: `${0.6 + index * 0.1}s`, animationFillMode: "forwards" }}
                 >
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden neon-border">
+                  <div className="relative w-12 h-12 flex-shrink-0 rounded-full overflow-hidden neon-border">
                     <img src={stream.thumbnail_url} alt={stream.user_name} className="object-cover w-full h-full" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -139,16 +139,16 @@ export default async function Home() {
                       <h3 className="text-sm font-semibold text-text-primary truncate group-hover:text-accent-purple transition-colors">
                         {stream.user_name}
                       </h3>
-                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase"
+                      <span className="inline-flex flex-shrink-0 items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase"
                         style={{ background: "rgba(16,185,129,0.15)", color: "#10B981", border: "1px solid rgba(16,185,129,0.3)" }}>
                         <span className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse-live" />
                         LIVE
                       </span>
                     </div>
                     <p className="text-xs text-text-secondary truncate mt-1">{stream.title}</p>
-                    <p className="text-[10px] font-bold text-accent-purple tracking-widest uppercase mt-0.5">{stream.game_name}</p>
+                    <p className="text-[10px] font-bold text-accent-purple tracking-widest uppercase mt-0.5 truncate">{stream.game_name}</p>
                   </div>
-                  <span className="text-sm font-[family-name:var(--font-rajdhani)] font-bold text-accent-green whitespace-nowrap">
+                  <span className="text-sm font-[family-name:var(--font-rajdhani)] font-bold text-accent-green whitespace-nowrap flex-shrink-0">
                     {new Intl.NumberFormat('es-ES').format(stream.viewer_count)}
                   </span>
                 </a>
@@ -157,11 +157,11 @@ export default async function Home() {
           </div>
 
           {/* Latest News */}
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-1 h-8 rounded-full bg-gradient-to-b from-accent-blue to-accent-purple" />
               <h2 className="text-2xl font-semibold text-text-primary">Latest News</h2>
-              <Link href="/news" className="ml-auto text-sm text-accent-purple hover:text-accent-blue transition-colors">
+              <Link href="/news" className="ml-auto text-sm text-accent-purple hover:text-accent-blue transition-colors flex-shrink-0">
                 Ver todas →
               </Link>
             </div>
