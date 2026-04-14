@@ -110,7 +110,7 @@ export function NewsInteractiveWidget({ initialNews }: { initialNews: NewsArticl
            </div>
         )}
 
-        {displayNews.length > 0 ? displayNews.map((item: NewsArticle, index: number) => (
+        {displayNews.length > 0 ? displayNews.slice(0, 5).map((item: NewsArticle, index: number) => (
           <div
             key={item.id}
             onClick={() => window.open(item.url, '_blank', 'noopener,noreferrer')}
