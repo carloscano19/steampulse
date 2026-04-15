@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/games", label: "Games" },
   { href: "/creators", label: "Creators" },
   { href: "/news", label: "News" },
+  { href: "/wiki", label: "Wiki 📘" },
 ];
 
 export function Navbar() {
