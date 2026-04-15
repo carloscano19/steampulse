@@ -24,14 +24,13 @@ type Family = {
 const WIKI_DATA: Family[] = [
   {
     id: "rpg",
-    name: "Familia RPG (Rol)",
+    name: "RPG (Rol)",
     color: "text-accent-purple",
     icon: <BrainCircuit className="w-6 h-6" />,
     genres: [
       { id: "rpg", name: "RPG", fullName: "Juego de Rol", definition: "La base del rol. Encarnas a un personaje, tomas decisiones y mejoras sus estadísticas y nivel.", example: "The Witcher 3" },
-      { id: "arpg", name: "ARPG", fullName: "Action RPG", definition: "Rol centrado en el combate dinámico en tiempo real y la obtención de botín.", example: "Diablo IV", subgenres: [
-          { id: "soulslike", name: "Soulslike", definition: "Acción con dificultad extrema, pérdida de recursos al morir y combate basado en patrones.", example: "Elden Ring" }
-      ]},
+      { id: "arpg", name: "ARPG", fullName: "Action RPG", definition: "Rol centrado en el combate dinámico en tiempo real y la obtención de botín.", example: "Diablo IV" },
+      { id: "soulslike", name: "Soulslike", fullName: "Subgén. ARPG", definition: "Acción con dificultad extrema, pérdida de recursos al morir y combate basado en patrones.", example: "Elden Ring" },
       { id: "jrpg", name: "JRPG", fullName: "Japanese RPG", definition: "Estilo japonés, habitualmente con combates por turnos y gran peso narrativo.", example: "Persona 5" },
       { id: "crpg", name: "CRPG", fullName: "Computer RPG", definition: "Rol clásico de vista isométrica, inspirado en juegos de mesa y con decisiones tácticas.", example: "Baldur's Gate 3" },
       { id: "trpg", name: "Tactical RPG", fullName: "TRPG", definition: "Fusión de rol y estrategia donde los combates ocurren en un tablero por turnos.", example: "Fire Emblem o XCOM" },
@@ -40,13 +39,12 @@ const WIKI_DATA: Family[] = [
   },
   {
     id: "action_adventure",
-    name: "Familia Acción y Aventura",
+    name: "Acción y Aventura",
     color: "text-accent-blue",
     icon: <Map className="w-6 h-6" />,
     genres: [
-      { id: "roguelike", name: "Roguelike", definition: "Niveles aleatorios y muerte permanente; si mueres, pierdes todo el progreso de la partida.", example: "Hades", subgenres: [
-          { id: "roguelite", name: "Roguelite", definition: "Como el anterior, pero permite comprar mejoras permanentes para cada intento.", example: "Vampire Survivors" }
-      ]},
+      { id: "roguelike", name: "Roguelike", definition: "Niveles aleatorios y muerte permanente; si mueres, pierdes todo el progreso de la partida.", example: "Hades" },
+      { id: "roguelite", name: "Roguelite", fullName: "Subgén. Roguelike", definition: "Como el anterior, pero permite comprar mejoras permanentes para cada intento.", example: "Vampire Survivors" },
       { id: "metroidvania", name: "Metroidvania", definition: "Mapa gigante interconectado que requiere nuevas habilidades para abrir caminos cerrados.", example: "Hollow Knight" },
       { id: "hack_slash", name: "Hack and Slash", definition: "Acción de combate cuerpo a cuerpo rápido enfocada en encadenar combos.", example: "Devil May Cry" },
       { id: "survival", name: "Survival", definition: "Centrado en la recolección de recursos, construcción de refugios y supervivencia al entorno.", example: "Rust o Valheim" },
@@ -58,7 +56,7 @@ const WIKI_DATA: Family[] = [
   },
   {
     id: "shooters",
-    name: "Familia Shooters (Disparos)",
+    name: "Shooters (Disparos)",
     color: "text-rose-500",
     icon: <Crosshair className="w-6 h-6" />,
     genres: [
@@ -97,13 +95,13 @@ const WIKI_DATA: Family[] = [
   }
 ];
 
-function GenreCard({ genre, isChild = false }: { genre: Genre, isChild?: boolean }) {
+function GenreCard({ genre }: { genre: Genre }) {
   return (
-    <div className={`relative flex flex-col p-5 rounded-2xl bg-[#0F172A]/40 glass border border-surface-2 hover:border-accent-purple/50 transition-all hover:-translate-y-1 ${isChild ? 'ml-6 mt-3 border-l-[3px] border-l-accent-purple/50' : 'h-full'}`}>
+    <div className={`relative flex flex-col p-5 rounded-2xl bg-[#0F172A]/40 glass border border-surface-2 hover:border-accent-purple/50 transition-all hover:-translate-y-1 h-full`}>
       <div className="flex-1">
         <h4 className="text-xl font-bold text-text-primary mb-1 flex items-baseline gap-2">
           {genre.name}
-          {genre.fullName && <span className="text-xs font-medium text-text-muted">({genre.fullName})</span>}
+          {genre.fullName && <span className="text-xs font-medium text-text-muted text-accent-purple">({genre.fullName})</span>}
         </h4>
         <p className="text-sm text-text-secondary leading-relaxed mb-4">
           {genre.definition}
@@ -113,14 +111,6 @@ function GenreCard({ genre, isChild = false }: { genre: Genre, isChild?: boolean
       <div className="pt-3 border-t border-surface-2/50 mt-auto flex items-center gap-2 text-xs font-semibold text-accent-blue bg-accent-blue/5 px-3 py-2 rounded-lg">
         <span>🎮</span> Ejemplo: <span className="text-text-primary">{genre.example}</span>
       </div>
-
-      {genre.subgenres && genre.subgenres.length > 0 && (
-         <div className="mt-4 flex flex-col gap-3">
-            {genre.subgenres.map(sub => (
-               <GenreCard key={sub.id} genre={sub} isChild={true} />
-            ))}
-         </div>
-      )}
     </div>
   );
 }
@@ -137,29 +127,12 @@ export default function WikiPage() {
       if (family.name.toLowerCase().includes(lowerQuery)) return family;
 
       // Filter genres inside
-      const filteredGenres = family.genres.map(genre => {
-         // Check if parent matches
-         const parentMatches = 
-            genre.name.toLowerCase().includes(lowerQuery) || 
-            (genre.fullName && genre.fullName.toLowerCase().includes(lowerQuery)) ||
-            genre.definition.toLowerCase().includes(lowerQuery) ||
-            genre.example.toLowerCase().includes(lowerQuery);
-
-         if (parentMatches) return genre; // Include parent and all its subgenres
-
-         // If parent doesn't match, check subgenres
-         if (genre.subgenres) {
-            const matchingSubs = genre.subgenres.filter(sub => 
-               sub.name.toLowerCase().includes(lowerQuery) ||
-               sub.definition.toLowerCase().includes(lowerQuery) ||
-               sub.example.toLowerCase().includes(lowerQuery)
-            );
-            if (matchingSubs.length > 0) {
-               return { ...genre, subgenres: matchingSubs };
-            }
-         }
-         return null;
-      }).filter(Boolean) as Genre[];
+      const filteredGenres = family.genres.filter(genre => 
+         genre.name.toLowerCase().includes(lowerQuery) || 
+         (genre.fullName && genre.fullName.toLowerCase().includes(lowerQuery)) ||
+         genre.definition.toLowerCase().includes(lowerQuery) ||
+         genre.example.toLowerCase().includes(lowerQuery)
+      );
 
       if (filteredGenres.length > 0) {
          return { ...family, genres: filteredGenres };
