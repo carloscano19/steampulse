@@ -97,24 +97,22 @@ const WIKI_DATA: Family[] = [
 
 function GenreCard({ genre }: { genre: Genre }) {
   return (
-    <div className="group relative rounded-2xl p-[1px] bg-gradient-to-br from-surface-2/50 to-surface-2/10 hover:from-accent-purple hover:to-cyan-400 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] h-full">
-      <div className="relative flex flex-col p-5 rounded-[15px] bg-[#0F172A]/5 backdrop-blur-[12px] h-full overflow-hidden">
-        {/* Subtle inner highlight */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none rounded-[15px]" />
-        
-        <div className="flex-1 relative z-10">
-          <h4 className="text-xl font-bold text-text-primary mb-1 flex items-baseline gap-2">
-            {genre.name}
-            {genre.fullName && <span className="text-xs font-medium text-accent-purple drop-shadow-sm">({genre.fullName})</span>}
-          </h4>
-          <p className="text-sm text-text-secondary leading-relaxed mb-4">
-            {genre.definition}
-          </p>
-        </div>
-        
-        <div className="relative z-10 pt-3 border-t border-surface-2/50 mt-auto flex items-center gap-2 text-xs font-semibold text-accent-blue bg-accent-blue/5 px-3 py-2 rounded-lg">
-          <span>🎮</span> Ejemplo: <span className="text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] font-bold">{genre.example}</span>
-        </div>
+    <div className="group relative flex flex-col p-5 rounded-2xl bg-[#0F172A]/40 glass border border-surface-2 hover:border-accent-purple hover:shadow-[0_0_25px_rgba(168,85,247,0.4)] transition-all duration-300 hover:scale-105 h-full overflow-hidden">
+      {/* Subtle inner highlight */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
+      
+      <div className="flex-1 relative z-10">
+        <h4 className="text-xl font-bold text-text-primary mb-1 flex items-baseline gap-2">
+          {genre.name}
+          {genre.fullName && <span className="text-xs font-medium text-accent-purple drop-shadow-sm">({genre.fullName})</span>}
+        </h4>
+        <p className="text-sm text-text-secondary leading-relaxed mb-4 group-hover:text-text-primary transition-colors">
+          {genre.definition}
+        </p>
+      </div>
+      
+      <div className="relative z-10 pt-3 border-t border-surface-2/50 mt-auto flex items-center gap-2 text-xs font-semibold text-accent-blue bg-accent-blue/5 px-3 py-2 rounded-lg">
+        <span>🎮</span> Ejemplo: <span className="text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] font-bold">{genre.example}</span>
       </div>
     </div>
   );
