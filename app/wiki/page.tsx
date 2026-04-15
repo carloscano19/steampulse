@@ -97,19 +97,24 @@ const WIKI_DATA: Family[] = [
 
 function GenreCard({ genre }: { genre: Genre }) {
   return (
-    <div className={`relative flex flex-col p-5 rounded-2xl bg-[#0F172A]/40 glass border border-surface-2 hover:border-accent-purple/50 transition-all hover:-translate-y-1 h-full`}>
-      <div className="flex-1">
-        <h4 className="text-xl font-bold text-text-primary mb-1 flex items-baseline gap-2">
-          {genre.name}
-          {genre.fullName && <span className="text-xs font-medium text-text-muted text-accent-purple">({genre.fullName})</span>}
-        </h4>
-        <p className="text-sm text-text-secondary leading-relaxed mb-4">
-          {genre.definition}
-        </p>
-      </div>
-      
-      <div className="pt-3 border-t border-surface-2/50 mt-auto flex items-center gap-2 text-xs font-semibold text-accent-blue bg-accent-blue/5 px-3 py-2 rounded-lg">
-        <span>🎮</span> Ejemplo: <span className="text-text-primary">{genre.example}</span>
+    <div className="group relative rounded-2xl p-[1px] bg-gradient-to-br from-surface-2/50 to-surface-2/10 hover:from-accent-purple hover:to-cyan-400 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] h-full">
+      <div className="relative flex flex-col p-5 rounded-[15px] bg-[#0F172A]/5 backdrop-blur-[12px] h-full overflow-hidden">
+        {/* Subtle inner highlight */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none rounded-[15px]" />
+        
+        <div className="flex-1 relative z-10">
+          <h4 className="text-xl font-bold text-text-primary mb-1 flex items-baseline gap-2">
+            {genre.name}
+            {genre.fullName && <span className="text-xs font-medium text-accent-purple drop-shadow-sm">({genre.fullName})</span>}
+          </h4>
+          <p className="text-sm text-text-secondary leading-relaxed mb-4">
+            {genre.definition}
+          </p>
+        </div>
+        
+        <div className="relative z-10 pt-3 border-t border-surface-2/50 mt-auto flex items-center gap-2 text-xs font-semibold text-accent-blue bg-accent-blue/5 px-3 py-2 rounded-lg">
+          <span>🎮</span> Ejemplo: <span className="text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)] font-bold">{genre.example}</span>
+        </div>
       </div>
     </div>
   );
@@ -142,8 +147,17 @@ export default function WikiPage() {
   }, [query]);
 
   return (
-    <div className="min-h-screen pb-20">
-      {/* Header Background */}
+    <div className="relative min-h-screen pb-20 overflow-hidden">
+      {/* Dynamic Background Depth */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-accent-purple/10 blur-[120px]" />
+        <div className="absolute top-[40%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-cyan-500/10 blur-[100px]" />
+        <div className="absolute bottom-[-20%] left-[20%] w-[60vw] h-[60vw] rounded-full bg-accent-blue/10 blur-[150px]" />
+      </div>
+
+      {/* Main Content Wrapper */}
+      <div className="relative z-10">
+        {/* Header Background */}
       <div className="relative pt-24 pb-12 overflow-hidden border-b border-surface-2/50">
         <div className="absolute inset-0 bg-gradient-to-b from-[#0F172A]/80 to-background z-0" />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-accent-purple/10 rounded-full blur-[100px] -translate-y-1/2 pointer-events-none" />
@@ -189,7 +203,7 @@ export default function WikiPage() {
                <section key={family.id} className="animate-fade-in relative">
                   {/* Family Header */}
                   <h2 className={`text-3xl font-black ${family.color} mb-8 flex items-center gap-3 font-[family-name:var(--font-rajdhani)] uppercase tracking-wider`}>
-                     <span className={`p-2 rounded-xl bg-surface-2/50 border border-surface-2 ${family.color}`}>
+                     <span className={`p-2 rounded-xl bg-surface-2/50 border border-surface-2 ${family.color} drop-shadow-[0_0_12px_currentColor]`}>
                        {family.icon}
                      </span>
                      {family.name}
@@ -205,6 +219,7 @@ export default function WikiPage() {
             ))}
           </div>
         )}
+      </div>
       </div>
     </div>
   );
