@@ -4,8 +4,6 @@ import { getGameStreams } from "@/lib/api/twitch";
 import { getGameSpecificNews, getGameGuides, getGameYouTubeVideos } from "@/lib/news-aggregator";
 import { VideoGrid } from "@/components/games/VideoGrid";
 import { notFound } from "next/navigation";
-import { cookies } from "next/headers";
-import { SpotlightButton } from "@/components/games/SpotlightButton";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -45,10 +43,6 @@ export default async function GameDetailPage({ params }: PageProps) {
   if (!game) {
     notFound();
   }
-
-  // Check if this game is currently the user's custom spotlight
-  const cookieStore = await cookies();
-  const isCurrentSpotlight = cookieStore.get("custom_spotlight")?.value === game.slug;
 
   // Cross-reference Live data — use allSettled so one API failure doesn't crash the whole page
   const [newsResult, streamsResult, guidesResult, ytResult] = await Promise.allSettled([
@@ -136,10 +130,6 @@ export default async function GameDetailPage({ params }: PageProps) {
               Desarrollado por <span className="text-text-secondary font-medium">{game.companies.slice(0, 3).join(", ")}</span>
             </p>
           )}
-
-          <div className="mb-8">
-            <SpotlightButton slug={game.slug} gameName={game.name} isCurrentSpotlight={isCurrentSpotlight} />
-          </div>
 
           {game.platforms && game.platforms.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-8">

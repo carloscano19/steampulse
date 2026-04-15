@@ -9,31 +9,14 @@ import Link from "next/link";
 export const revalidate = 300; // ISR: cache 5 minutes for spotlight page
 
 export const metadata: Metadata = {
-  title: "Spotlight VIP | StreamPulse",
-  description: "El Epicentro de la actualidad. Análisis profundo del juego número 1 del planeta en este instante.",
+  title: "Juego del Mes | StreamPulse",
+  description: "El Epicentro de la actualidad. Análisis profundo del juego TOP del planeta en este instante.",
 };
 
 export default async function SpotlightPage() {
   try {
-    const cookieStore = await cookies();
-    const customSpotlightSlug = cookieStore.get("custom_spotlight")?.value;
-
-    let trending: any[] = [];
-    
-    if (customSpotlightSlug) {
-      // 1. Fetch user's handpicked Spotlight VIP
-      try {
-        const customGame = await getGameBySlug(customSpotlightSlug);
-        if (customGame) trending = [customGame];
-      } catch (err) {
-        console.error("Spotlight: custom game fetch failed:", err);
-      }
-    } 
-    
-    if (!trending.length) {
-      // 2. Fallback to global absolute top #1 trending game
-      trending = await searchGames("", 1, 0);
-    }
+    // Force "Juego del Mes" to Crimson Desert
+    let trending = await searchGames("Crimson Desert", 1, 0);
 
     const spotlightGame = trending && trending.length > 0 ? trending[0] : null;
 
@@ -78,7 +61,7 @@ export default async function SpotlightPage() {
           <div className="relative z-10 w-full max-w-[1400px] px-4 sm:px-6 lg:px-12 pb-20 text-center animate-slide-up">
              <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-[#EAB308]/50 bg-[#EAB308]/10 text-[#EAB308] font-bold text-sm tracking-widest uppercase mb-6 shadow-[0_0_30px_rgba(234,179,8,0.3)]">
                <span className="w-2.5 h-2.5 rounded-full bg-[#EAB308] animate-pulse" />
-               Trending #1 Global
+               Juego del Mes
              </div>
              <h1 className="text-6xl md:text-8xl font-black text-white mb-6 uppercase tracking-tighter" style={{ textShadow: "0 10px 40px rgba(0,0,0,0.8)" }}>
                {spotlightGame.name}

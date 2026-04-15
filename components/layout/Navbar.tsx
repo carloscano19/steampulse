@@ -11,7 +11,7 @@ type NavItem = {
 
 const navLinks: NavItem[] = [
   { href: "/", label: "Home" },
-  { href: "/spotlight", label: "Juego de la Semana ⚡" },
+  { href: "/spotlight", label: "Juego del Mes ⚡" },
   { 
     label: "Destacados ⭐", 
     subItems: [
