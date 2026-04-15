@@ -272,7 +272,7 @@ export default async function GameDetailPage({ params }: PageProps) {
                     <a href={`https://twitch.tv/${stream.user_name}`} target="_blank" rel="noopener noreferrer" key={stream.id} className="block glass p-3 rounded-xl border border-surface-2 hover:border-[#9146FF]/50 transition-all hover:-translate-y-1 group">
                        <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
                           <Image src={stream.thumbnail_url} alt={stream.title} fill className="object-cover" unoptimized />
-                          <div className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
+                          <div className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 animate-pulse">
                              <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" /> LIVE
                           </div>
                        </div>

@@ -72,7 +72,7 @@ export default async function CreatorsPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
               
               {/* Badge LIVE */}
-              <div className="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded flex items-center gap-1.5 shadow-xl">
+              <div className="absolute top-3 left-3 bg-red-600 animate-pulse text-white text-[10px] font-black px-2 py-0.5 rounded flex items-center gap-1.5 shadow-xl">
                  <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                  LIVE
               </div>
