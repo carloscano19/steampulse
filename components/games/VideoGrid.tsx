@@ -35,17 +35,18 @@ export function VideoGrid({ videos }: { videos: VideoArticle[] }) {
             className="group cursor-pointer glass rounded-2xl border border-surface-2 overflow-hidden hover:border-accent-purple/50 transition-all duration-300 hover:-translate-y-1"
           >
             <div className="relative aspect-video overflow-hidden">
-               {video.imageUrl ? (
+                {video.imageUrl ? (
                   <img 
                     src={video.imageUrl} 
                     alt={video.title} 
                     className="object-cover w-full h-full transform group-hover:scale-105 transition-all duration-500" 
                   />
-               ) : (
-                  <div className="w-full h-full bg-surface-2 flex items-center justify-center">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" className="text-text-muted opacity-20"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77.42-1.56.42-4.81.42-4.81s0-3.25-.42-4.81zM10 15V9l5 3-5 3z"/></svg>
+                ) : (
+                  <div className="w-full h-full bg-cyber-pattern flex items-center justify-center relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-accent-purple/20 to-transparent" />
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" className="text-accent-purple opacity-40 relative z-10"><path d="M21.58 7.19c-.23-.86-.91-1.54-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42c-.86.23-1.54.91-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81c.23.86.91 1.54 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42c.86-.23 1.54-.91 1.77-1.77.42-1.56.42-4.81.42-4.81s0-3.25-.42-4.81zM10 15V9l5 3-5 3z"/></svg>
                   </div>
-               )}
+                )}
                
                {/* Play Overlay */}
                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 backdrop-blur-[2px]">

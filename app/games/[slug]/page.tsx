@@ -55,15 +55,10 @@ export default async function GameDetailPage({ params }: PageProps) {
   const bgImage = game.cover_url ? game.cover_url.replace("t_cover_big", "t_1080p") : "";
 
   // Helper to ensure components always have an image (fallback to game's cover/background if Google News strips it)
-  const applyFallbackImage = (item: any) => ({
-    ...item,
-    imageUrl: item.imageUrl || bgImage || game.cover_url || ""
-  });
-
-  const relatedNews = newsResult.status === "fulfilled" ? newsResult.value.map(applyFallbackImage) : [];
+  const relatedNews = newsResult.status === "fulfilled" ? newsResult.value : [];
   const streams = streamsResult.status === "fulfilled" ? streamsResult.value : [];
-  const gameGuides = guidesResult.status === "fulfilled" ? guidesResult.value.map(applyFallbackImage) : [];
-  const youtubeVideos = ytResult.status === "fulfilled" ? ytResult.value.map(applyFallbackImage) : [];
+  const gameGuides = guidesResult.status === "fulfilled" ? guidesResult.value : [];
+  const youtubeVideos = ytResult.status === "fulfilled" ? ytResult.value : [];
 
   const releaseYear = game.release_date
     ? new Date(game.release_date).getFullYear()
@@ -171,13 +166,13 @@ export default async function GameDetailPage({ params }: PageProps) {
                  
                  {/* Official Wiki Mega Button */}
                  <a 
-                    href={`https://duckduckgo.com/?q=site:fandom.com+OR+site:fextralife.com+OR+site:ign.com/wikis+"${encodeURIComponent(game.name)}"`} 
+                    href={`https://www.google.com/search?q=${encodeURIComponent(game.name + " guías consejos paso a paso wiki")}`}
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#EAB308] to-yellow-500 text-surface-dark font-extrabold text-sm transition-all hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-[#EAB308]/20 whitespace-nowrap"
                  >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                    Buscar en Wikis Oficiales
+                    Buscar Guías en Google
                  </a>
                </div>
 
@@ -200,9 +195,16 @@ export default async function GameDetailPage({ params }: PageProps) {
                     <div className="grid md:grid-cols-3 gap-4">
                        {gameGuides.map((guide) => (
                           <a href={guide.url} target="_blank" rel="noopener noreferrer" key={guide.id} className="flex flex-col rounded-xl border border-surface-2 bg-surface/30 hover:bg-surface/60 hover:border-[#EAB308]/30 transition-all overflow-hidden group hover:-translate-y-0.5">
-                             {guide.imageUrl && (
+                             {guide.imageUrl ? (
                                <div className="h-28 w-full relative overflow-hidden bg-surface-2">
                                   <img src={guide.imageUrl} alt="" className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" />
+                               </div>
+                             ) : (
+                               <div className="h-28 w-full bg-cyber-pattern relative overflow-hidden">
+                                  <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/80 to-transparent" />
+                                  <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                                  </div>
                                </div>
                              )}
                              <div className="p-4 flex flex-col flex-1">
@@ -229,11 +231,15 @@ export default async function GameDetailPage({ params }: PageProps) {
                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {relatedNews.map((news) => (
                       <a href={news.url} target="_blank" rel="noopener noreferrer" key={news.id} className="block glass p-4 rounded-xl border border-surface-2 hover:border-accent-purple/50 transition-all hover:scale-[1.02]">
-                         {news.imageUrl && (
-                            <div className="aspect-video w-full rounded-lg h-24 mb-3 overflow-hidden">
-                               <img src={news.imageUrl} alt="" className="object-cover w-full h-full" />
-                            </div>
-                         )}
+                          {news.imageUrl ? (
+                             <div className="aspect-video w-full rounded-lg h-24 mb-3 overflow-hidden">
+                                <img src={news.imageUrl} alt="" className="object-cover w-full h-full" />
+                             </div>
+                          ) : (
+                             <div className="aspect-video w-full rounded-lg h-24 mb-3 bg-cyber-pattern relative overflow-hidden">
+                                <div className="absolute inset-0 bg-accent-blue/10" />
+                             </div>
+                          )}
                          <span className={`text-[10px] uppercase font-bold text-accent-${news.badgeAccent || 'blue'} mb-1 block`}>{news.source}</span>
                          <h4 className="text-sm font-medium text-text-primary line-clamp-3">{news.title}</h4>
                       </a>

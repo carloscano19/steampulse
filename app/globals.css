@@ -71,7 +71,7 @@ body {
 
 @keyframes pulse-live {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.5); }
+  50% { opacity: 0.3; transform: scale(1.15); filter: drop-shadow(0 0 10px rgba(220, 38, 38, 0.8)); }
 }
 
 @keyframes float {
@@ -140,7 +140,10 @@ body {
 }
 
 .animate-marquee {
-  animation: marquee 30s linear infinite;
+  animation: marquee 150s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
 /* Staggered animations */
@@ -163,8 +166,8 @@ body {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px; /* Border thickness */
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.4), rgba(14, 165, 233, 0.1));
+  padding: 3px; /* TRIPLE Border thickness for brute-force visibility */
+  background: linear-gradient(135deg, #7C3AED 0%, rgba(124, 58, 237, 0) 40%, rgba(14, 165, 233, 0) 60%, #0EA5E9 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -217,4 +220,14 @@ body {
   animation: particle-float 20s linear infinite;
   pointer-events: none;
   z-index: 0;
+}
+/* Cyberpunk geometric pattern for fallback images */
+.bg-cyber-pattern {
+  background-color: #0F172A;
+  background-image: 
+    linear-gradient(rgba(124, 58, 237, 0.1) 1px, transparent 1px),
+    linear-gradient(90(px), rgba(124, 58, 237, 0.1) 1px, transparent 1px),
+    radial-gradient(rgba(14, 165, 233, 0.15) 1px, transparent 0);
+  background-size: 20px 20px, 20px 20px, 40px 40px;
+  background-position: center;
 }
